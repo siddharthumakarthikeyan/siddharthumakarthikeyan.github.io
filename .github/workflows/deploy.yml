@@ -28,16 +28,14 @@ jobs:
           cache: npm
 
       - name: Install deps
-        run: npm ci
+        run: npm install
 
-      # Some runners need the CLI explicitly
       - name: Install Gatsby CLI
         run: npm install -g gatsby-cli
 
       - name: Build Gatsby site
         run: gatsby build
 
-      # Avoid Jekyll processing and be explicit about the output dir
       - name: Add .nojekyll
         run: echo > public/.nojekyll
 
