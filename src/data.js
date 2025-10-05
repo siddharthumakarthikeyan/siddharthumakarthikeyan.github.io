@@ -57,12 +57,12 @@ const siteData = {
 
  
   name: {
-    en: "Ji Yuan 'Steven' Feng",
-    zh: "冯纪元"
+    en: "Siddharth Umakarthikeyan",
+    zh: "西达尔特·乌玛卡尔提凯扬"
   },
  
   headerParagraph: {
-    en: "I am a robotics systems engineer passionate about bringing autonomous and biomimetic robots to life.",
+    en: "I am a robotics systems engineer passionate about bringing autonomous and intelligent robots to life.",
     zh: "我是一名机器人系统工程师,致力于将智能机器人和仿生机器人带入现实。"
   },
 
@@ -78,7 +78,7 @@ const siteData = {
   // Section titles  
   sections: {
     about: { en: "About", zh: "关于我" },
-    nvidia: { en: "NVIDIA", zh: "英伟达" },
+    nvidia: { en: "Work Experiences", zh: "工作" },
     publications: { en: "Publications", zh: "论文" },
     education: { en: "Education", zh: "学历" },
     internships: { en: "Internships", zh: "实习" },
@@ -94,7 +94,7 @@ const siteData = {
     close: { en: "Close", zh: "关闭" }
   },
 
-  contactEmail: "jy5feng@uwaterloo.ca",
+  contactEmail: "siddharth.some@gmail.com",
 
   education: [
     {
@@ -422,21 +422,21 @@ const siteData = {
 
 // About Section --------------
 aboutParaOne: {
-  en: "I am a robotics engineer with expertise in simulation development, narrowing the sim-to-real gap by creation of high-fidelity virtual environments to accelerate robotic testing and deployment. I am particularly passionate about reinforcement learning and imitation learning, exploring control strategies that enable safer, more human-like interactions.",
-          zh: "我是一名机器人工程师, 专精于仿真开发, 通过创建高保真虚拟环境缩小仿真到现实的差距, 加速机器人测试和部署。我热衷于强化学习和模仿学习, 探索能够实现更安全, 更人性化的交互控制策略。"
+  en: "I’m a robotics engineer specializing in simulation and hardware bring-up, closing the sim-to-real gap by building high-fidelity virtual environments that de-risk and speed robotic testing and deployment. I blend first-principles dynamics and control with modern AI to shape safe, human-aware behavior, working daily with ROS/ROS 2, C++/Python, and tools like Isaac Sim and Gazebo.",
+  zh: "我是一名专注于仿真与硬件调试的机器人工程师，通过构建高保真虚拟环境来缩小“仿真到现实”的差距，加速并降险机器人测试与部署。我将第一性原理的动力学与控制与现代人工智能（强化学习、模仿学习）结合，打造安全、对人友好的行为；日常使用 ROS/ROS 2、C++/Python 以及 Isaac Sim、Gazebo 等工具。"
 },
 aboutParaTwo: {
-  en: "I earned my Bachelor's degree in Mechatronics Engineering from the University of Waterloo. I also conducted human-robot interaction research at the Active Robotics Interaction Lab under Dr. Yue Hu, with a publication on IEEE Robotics and Automation Letters.",
-          zh: "我在滑铁卢大学获得了机电工程学士学位。我还在Hu Yue教授指导下的Active Interactive Robotics Lab进行了人机交互研究, 并在IEEE机器人与自动化快报 (IEEE Robotics and Automation Letters) 上发表了论文。"
+  en: "I completed my PhD in 2025 on multi-robot collaborative control and 3D path planning. Earlier, I earned an M.Tech in Artificial Intelligence & Robotics and a B.Tech in Mechanical Engineering. I’ve also conducted robotics research at IIT Delhi and IIIT Hyderabad.",
+  zh: "我于 2025 年完成博士学位，研究方向为多机器人协同控制与三维路径规划。此前获得 SASTRA University 的人工智能与机器人学硕士（M.Tech）以及 PRIST University 的机械工程学士（B.Tech）。我还在印度理工学院德里分校（IIT Delhi）与海得拉巴国际信息技术学院（IIIT Hyderabad）从事机器人研究，并在 IEEE《机器人与自动化快报》（RA-L）发表成果。"
 },
 aboutParaThree: {
-  en: "When I'm not building robots, you can find me hiking, playing my clarinet and accordion, or exploring new cuisines around the city.",
-          zh: "在工作之余, 我喜欢去爬山, 吹黑管, 拉手风琴, 和探索新的事物。"
+  en: "When I’m not building robots, I’m usually on a trail, playing the clarinet and accordion, or exploring new cuisines around the city.",
+  zh: "工作之余，我常去徒步、演奏单簧管与手风琴，或在城市中探索各地美食。"
 },
 
 nvidiaTime: {
-  en: "2023 to Present",
-  zh: "2023年至今"
+  en: "2020 to Present",
+  zh: "2020年至今"
 },
 
 nvidiaExperience: [
@@ -879,15 +879,15 @@ projectsCarouselItems: [
   social: [
 
     { img: githubIcon, 
-      url: "https://github.com/stevenf7"
+      url: "https://github.com/siddharthumakarthikeyan"
     },
     {
       img: googleScholarIcon,
-      url: "https://scholar.google.com/citations?hl=en&user=0YSkT7UAAAAJ",
+      url: "https://scholar.google.com/citations?user=Rl6gtuoAAAAJ&hl",
     },
     {
       img: linkedinIcon,
-      url: "https://www.linkedin.com/in/stevenfeng7/",
+      url: "https://www.linkedin.com/in/siddharthind/",
     },
 
   ],
