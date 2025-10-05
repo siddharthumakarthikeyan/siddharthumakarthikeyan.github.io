@@ -24,22 +24,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node (18)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: 18
+          cache: "yarn"
 
-      # More forgiving than `npm ci` across platforms/lockfiles
-      - name: Install deps
-        run: npm install
+      - name: Enable Corepack (Yarn)
+        run: corepack enable
 
-      - name: Print env + versions
+      - name: Install deps (Yarn)
+        run: yarn install --frozen-lockfile --network-timeout 600000
+
+      # Optional: some Gatsby themes need sass present. Harmless if unused.
+      - name: Ensure sass is available (ok if already)
+        run: yarn add -D sass || true
+
+      - name: Print versions / sanity
         run: |
           node -v
-          npm -v
+          yarn -v
           npx gatsby --version || true
-          npm ls --depth=0 || true
+          yarn list --depth=0 || true
 
       - name: Build Gatsby site
         run: npx gatsby build --no-color
