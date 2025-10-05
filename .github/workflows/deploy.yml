@@ -17,6 +17,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GATSBY_TELEMETRY_DISABLED: "1"
+      NODE_OPTIONS: "--max_old_space_size=4096"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,14 +30,19 @@ jobs:
           node-version: 20
           cache: npm
 
+      # More forgiving than `npm ci` across platforms/lockfiles
       - name: Install deps
         run: npm install
 
-      - name: Install Gatsby CLI
-        run: npm install -g gatsby-cli
+      - name: Print env + versions
+        run: |
+          node -v
+          npm -v
+          npx gatsby --version || true
+          npm ls --depth=0 || true
 
       - name: Build Gatsby site
-        run: gatsby build
+        run: npx gatsby build --no-color
 
       - name: Add .nojekyll
         run: echo > public/.nojekyll
