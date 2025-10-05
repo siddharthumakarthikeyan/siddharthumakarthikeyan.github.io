@@ -147,7 +147,7 @@ const Header = () => {
                     delaySpeed={1200}
                     words={language === 'zh' ? 
                       ["机器人工程师", "飞行员", "程序猿", "学生", "单簧管演奏者", "固件开发工程师"] :
-                      ["Robotics Engineer", "Pilot", "Code Monkey", "Accordionist", "Simulation Developer", "Student", "Clarinetist", "Firmware Developer"]
+                      ["Robotics Engineer", "Pilot", "Code Monkey", "Accordionist", "Simulation Developer", "Researcher", "Clarinetist", "Firmware Developer"]
                     }
                   />
                 </span>
