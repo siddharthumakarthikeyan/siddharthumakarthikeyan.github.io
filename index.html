@@ -408,44 +408,53 @@ body:hover #cursor { opacity:1; }
    SKILLS
 ═══════════════════════════════════════ */
 #skills { padding:120px 0; background:var(--c-bg2); border-top:1px solid var(--c-line); }
-.skills-layout { display:grid; grid-template-columns:300px 1fr; gap:80px; }
-.skills-left { position:sticky; top:120px; }
-.skills-left .label { margin-bottom:16px; }
-.skills-left h2 {
-  font-family:var(--ff-h); font-size:clamp(36px,4vw,52px);
-  font-weight:300; line-height:1.1; margin-bottom:20px;
+.skills-header { margin-bottom:64px; }
+.skills-header h2 {
+  font-family:var(--ff-h); font-size:clamp(38px,5vw,62px);
+  font-weight:300; line-height:1.05; margin-top:14px;
 }
-.skills-left p { font-size:14.5px; color:var(--c-muted); line-height:1.8; }
-.skills-right { display:flex; flex-direction:column; gap:1px; }
-.sk-row {
-  background:var(--c-white); padding:0;
-  border:1px solid transparent;
-  overflow:hidden;
-  transition:border-color .2s;
+.sk-grid {
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:1px; background:var(--c-line);
+  border:1px solid var(--c-line);
+  margin-bottom:1px;
 }
-.sk-row:hover { border-color:var(--c-line); }
-.sk-trigger {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:24px 32px; cursor:none;
-  border-bottom:1px solid var(--c-line);
+.sk-card {
+  background:var(--c-white);
+  padding:32px 24px 28px;
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center; gap:0;
+  transition:background .25s, transform .25s var(--ease);
+  position:relative; overflow:hidden;
 }
-.sk-name { font-family:var(--ff-h); font-size:22px; font-weight:400; }
-.sk-toggle { font-size:20px; color:var(--c-faint); transition:transform .3s; line-height:1; }
-.sk-row.open .sk-toggle { transform:rotate(45deg); color:var(--c-accent); }
-.sk-body {
-  max-height:0; overflow:hidden;
-  transition:max-height .4s var(--ease);
+.sk-card::after {
+  content:''; position:absolute; bottom:0; left:0; right:0;
+  height:2px; background:var(--c-accent);
+  transform:scaleX(0); transition:transform .3s var(--ease);
 }
-.sk-row.open .sk-body { max-height:300px; }
-.sk-tags {
-  display:flex; flex-wrap:wrap; gap:8px;
-  padding:20px 32px 24px;
+.sk-card:hover { background:var(--c-bg2); transform:translateY(-3px); }
+.sk-card:hover::after { transform:scaleX(1); }
+.sk-card-icon {
+  width:52px; height:52px; margin-bottom:16px;
+  color:var(--c-accent);
+  display:flex; align-items:center; justify-content:center;
 }
-.sk-tag {
-  font-size:12px; font-weight:500; letter-spacing:.05em;
-  color:var(--c-accent); background:var(--c-accent-l);
-  padding:5px 14px; border-radius:100px;
+.sk-card-icon svg { width:100%; height:100%; }
+.sk-card-name {
+  font-family:var(--ff-h); font-size:18px; font-weight:400;
+  color:var(--c-ink); margin-bottom:14px; line-height:1.2;
 }
+.sk-card-tags {
+  display:flex; flex-direction:column; gap:5px; width:100%;
+}
+.sk-card-tags span {
+  font-size:11px; font-weight:500; letter-spacing:.05em;
+  color:var(--c-muted);
+  background:var(--c-bg2); padding:4px 10px; border-radius:100px;
+  transition:background .2s, color .2s;
+}
+.sk-card:hover .sk-card-tags span { background:var(--c-accent-l); color:var(--c-accent); }
 
 /* ═══════════════════════════════════════
    PROJECTS
@@ -507,33 +516,87 @@ body:hover #cursor { opacity:1; }
    RESEARCH
 ═══════════════════════════════════════ */
 #research { padding:120px 0; background:var(--c-bg); border-top:1px solid var(--c-line); }
-.research-layout { display:grid; grid-template-columns:280px 1fr; gap:80px; }
-.research-left { position:sticky; top:120px; }
-.research-left .label { margin-bottom:16px; }
-.research-left h2 { font-family:var(--ff-h); font-size:clamp(34px,4vw,50px); font-weight:300; line-height:1.1; margin-bottom:20px; }
-.research-left p { font-size:14px; color:var(--c-muted); line-height:1.8; }
-.research-right { border-top:1px solid var(--c-line); }
+.research-header { margin-bottom:72px; }
+.research-header h2 {
+  font-family:var(--ff-h); font-size:clamp(38px,5vw,62px);
+  font-weight:300; line-height:1.05; margin-top:14px;
+}
+.research-header p { font-size:16px; color:var(--c-muted); max-width:560px; line-height:1.75; margin-top:16px; }
 
-.paper {
-  padding:44px 0;
+.paper-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px; background:var(--c-line);
+  border:1px solid var(--c-line);
+}
+.paper-card {
+  background:var(--c-white);
+  display:flex; flex-direction:column;
+  transition:background .2s;
+  overflow:hidden;
+}
+.paper-card:hover { background:var(--c-bg); }
+
+/* Graphical abstract image */
+.paper-abstract {
+  width:100%; aspect-ratio:16/9;
+  background:var(--c-bg2);
+  position:relative; overflow:hidden;
   border-bottom:1px solid var(--c-line);
-  display:grid; grid-template-columns:100px 1fr;
-  gap:36px; align-items:start;
-  transition:padding .2s;
+  display:flex; align-items:center; justify-content:center;
 }
-.paper:hover { padding-left:12px; padding-right:12px; background:var(--c-white); margin:0 -12px; }
-.paper-yr { font-family:var(--ff-h); font-size:30px; font-weight:300; color:var(--c-accent); line-height:1; }
+.paper-abstract img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .5s var(--ease);
+}
+.paper-card:hover .paper-abstract img { transform:scale(1.04); }
+.paper-abstract-ph {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:10px; padding:24px; text-align:center;
+}
+.paper-abstract-ph svg { width:36px; height:36px; color:var(--c-line); }
+.paper-abstract-ph span { font-size:11px; color:var(--c-faint); line-height:1.5; }
+
+/* Meta strip */
+.paper-meta {
+  display:flex; align-items:center; gap:10px;
+  padding:14px 24px;
+  border-bottom:1px solid var(--c-line);
+}
+.paper-yr {
+  font-family:var(--ff-h); font-size:20px; font-weight:300;
+  color:var(--c-accent); line-height:1;
+}
 .paper-type {
-  font-size:9.5px; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
+  font-size:9.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
   color:var(--c-faint); border:1px solid var(--c-line);
-  padding:3px 10px; border-radius:100px; width:fit-content; margin-top:8px;
+  padding:3px 10px; border-radius:100px;
 }
-.paper h3 { font-family:var(--ff-h); font-size:clamp(17px,1.8vw,22px); font-weight:400; line-height:1.3; margin-bottom:10px; }
-.paper p { font-size:13.5px; color:var(--c-muted); line-height:1.8; margin-bottom:14px; }
-.paper-tags { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px; }
-.paper-tag { font-size:11px; color:var(--c-muted); border:1px solid var(--c-line); padding:3px 10px; border-radius:100px; }
-.paper-link { font-size:12.5px; font-weight:500; letter-spacing:.06em; color:var(--c-accent); transition:letter-spacing .3s; }
-.paper-link:hover { letter-spacing:.14em; }
+
+/* Body */
+.paper-body { padding:24px 24px 28px; flex:1; display:flex; flex-direction:column; }
+.paper-body h3 {
+  font-family:var(--ff-h); font-size:clamp(16px,1.5vw,19px);
+  font-weight:400; line-height:1.3; margin-bottom:12px; color:var(--c-ink);
+}
+.paper-body p {
+  font-size:13px; color:var(--c-muted); line-height:1.8;
+  margin-bottom:16px; flex:1;
+}
+.paper-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
+.paper-tag { font-size:10.5px; color:var(--c-muted); border:1px solid var(--c-line); padding:3px 10px; border-radius:100px; }
+.paper-link {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--c-accent); margin-top:auto;
+  transition:gap .25s;
+}
+.paper-link:hover { gap:10px; }
+
+/* Wide card — spans 2 cols for the 2 remaining papers */
+.paper-card.wide { grid-column:span 1; }
 
 /* ═══════════════════════════════════════
    EXPERIENCE
@@ -658,10 +721,8 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
   .hero-right { display:none; }
   .about-grid { grid-template-columns:1fr; gap:48px; }
   .consult-grid { grid-template-columns:1fr; }
-  .skills-layout { grid-template-columns:1fr; }
-  .skills-left { position:static; }
-  .research-layout { grid-template-columns:1fr; }
-  .research-left { position:static; }
+  .sk-grid { grid-template-columns:repeat(3,1fr); }
+  .paper-grid { grid-template-columns:repeat(2,1fr); }
   .proj { grid-template-columns:1fr; min-height:auto; }
   .proj:nth-child(even) .proj-visual, .proj:nth-child(even) .proj-detail { order:unset; }
   .proj-visual { min-height:280px; }
@@ -691,6 +752,8 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
   .proj-header { flex-direction:column; align-items:flex-start; gap:12px; }
   .proj-header p { text-align:left; max-width:100%; }
   .hero-scroll { display:none; }
+  .sk-grid { grid-template-columns:repeat(2,1fr); }
+  .paper-grid { grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -804,7 +867,7 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
             GitHub
           </a>
-          <a href="mailto:siddharthumakarthikeyan@gmail.com" class="alink">
+          <a href="/cdn-cgi/l/email-protection#4e3d272a2a262f3c3a263b232f252f3c3a2627252b372f200e29232f2722602d2123" class="alink">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             Email
           </a>
@@ -910,7 +973,7 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
         <h3>Ready to transform your operations<br>with <em>intelligent robotics?</em></h3>
         <p>Let's discuss your project requirements and how autonomous systems can deliver measurable impact for your organisation.</p>
       </div>
-      <a href="mailto:siddharthumakarthikeyan@gmail.com" class="btn-consult">
+      <a href="/cdn-cgi/l/email-protection#b4c7ddd0d0dcd5c6c0dcc1d9d5dfd5c6c0dcdddfd1cdd5daf4d3d9d5ddd89ad7dbd9" class="btn-consult">
         Start a Conversation <span>→</span>
       </a>
     </div>
@@ -920,34 +983,62 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
 <!-- SKILLS -->
 <section id="skills">
   <div class="wrap">
-    <div class="skills-layout">
-      <div class="skills-left">
-        <p class="label" style="margin-bottom:16px">03 — Skills</p>
-        <h2>Technical<br>Expertise</h2>
-        <p>A comprehensive toolkit built through years of hands-on research and industry deployment — spanning hardware to cloud.</p>
-      </div>
-      <div class="skills-right">
-        <div class="sk-row rv open">
-          <div class="sk-trigger"><span class="sk-name">Robotics &amp; ROS</span><span class="sk-toggle">+</span></div>
-          <div class="sk-body"><div class="sk-tags"><span class="sk-tag">ROS</span><span class="sk-tag">ROS2</span><span class="sk-tag">SLAM</span><span class="sk-tag">Nav2</span><span class="sk-tag">MoveIt</span><span class="sk-tag">AMR</span><span class="sk-tag">AGV</span><span class="sk-tag">Multi-Robot Systems</span><span class="sk-tag">Cable-Driven Manipulators</span></div></div>
+    <div class="skills-header rv">
+      <p class="label">03 — Skills</p>
+      <h2>Technical Expertise</h2>
+    </div>
+    <div class="sk-grid">
+
+      <div class="sk-card rv">
+        <div class="sk-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
         </div>
-        <div class="sk-row rv">
-          <div class="sk-trigger"><span class="sk-name">AI &amp; Machine Learning</span><span class="sk-toggle">+</span></div>
-          <div class="sk-body"><div class="sk-tags"><span class="sk-tag">Computer Vision</span><span class="sk-tag">Deep Learning</span><span class="sk-tag">Reinforcement Learning</span><span class="sk-tag">Multi-Modal Learning</span><span class="sk-tag">VLA</span><span class="sk-tag">PyTorch</span><span class="sk-tag">TensorFlow</span><span class="sk-tag">OpenCV</span><span class="sk-tag">PCL</span></div></div>
-        </div>
-        <div class="sk-row rv">
-          <div class="sk-trigger"><span class="sk-name">Simulation &amp; Digital Twins</span><span class="sk-toggle">+</span></div>
-          <div class="sk-body"><div class="sk-tags"><span class="sk-tag">NVIDIA Isaac Sim</span><span class="sk-tag">Omniverse</span><span class="sk-tag">Gazebo</span><span class="sk-tag">MATLAB</span><span class="sk-tag">Simulink</span><span class="sk-tag">SolidWorks</span><span class="sk-tag">CAD</span></div></div>
-        </div>
-        <div class="sk-row rv">
-          <div class="sk-trigger"><span class="sk-name">Hardware &amp; Sensor Fusion</span><span class="sk-toggle">+</span></div>
-          <div class="sk-body"><div class="sk-tags"><span class="sk-tag">LiDAR</span><span class="sk-tag">Depth Cameras</span><span class="sk-tag">IMU</span><span class="sk-tag">Sensor Fusion</span><span class="sk-tag">Embedded Systems</span><span class="sk-tag">Firmware</span><span class="sk-tag">ROV Systems</span></div></div>
-        </div>
-        <div class="sk-row rv">
-          <div class="sk-trigger"><span class="sk-name">Development &amp; Infrastructure</span><span class="sk-toggle">+</span></div>
-          <div class="sk-body"><div class="sk-tags"><span class="sk-tag">Python</span><span class="sk-tag">C++</span><span class="sk-tag">CUDA</span><span class="sk-tag">Linux</span><span class="sk-tag">Docker</span><span class="sk-tag">Git</span><span class="sk-tag">CI/CD</span></div></div>
+        <div class="sk-card-name">ROS &amp; Robotics</div>
+        <div class="sk-card-tags">
+          <span>ROS / ROS2</span><span>Nav2</span><span>MoveIt</span><span>SLAM</span><span>AMR · AGV</span><span>Multi-Robot</span>
         </div>
       </div>
+
+      <div class="sk-card rv">
+        <div class="sk-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M7 8l3 3-3 3M13 14h4"/></svg>
+        </div>
+        <div class="sk-card-name">AI &amp; Vision</div>
+        <div class="sk-card-tags">
+          <span>Computer Vision</span><span>Deep Learning</span><span>CUDA</span><span>PyTorch</span><span>VLA</span><span>OpenCV · PCL</span>
+        </div>
+      </div>
+
+      <div class="sk-card rv">
+        <div class="sk-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="sk-card-name">Digital Twins</div>
+        <div class="sk-card-tags">
+          <span>Isaac Sim</span><span>Omniverse</span><span>Gazebo</span><span>MATLAB</span><span>Simulink</span><span>Sim-to-Real</span>
+        </div>
+      </div>
+
+      <div class="sk-card rv">
+        <div class="sk-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="sk-card-name">Sensor Fusion</div>
+        <div class="sk-card-tags">
+          <span>LiDAR</span><span>Depth Cameras</span><span>IMU</span><span>EKF / UKF</span><span>Point Cloud</span><span>ROV Systems</span>
+        </div>
+      </div>
+
+      <div class="sk-card rv">
+        <div class="sk-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="sk-card-name">Development</div>
+        <div class="sk-card-tags">
+          <span>Python</span><span>C++</span><span>Linux</span><span>Docker</span><span>Git</span><span>CI/CD</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1056,65 +1147,103 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
 <!-- RESEARCH -->
 <section id="research">
   <div class="wrap">
-    <div class="research-layout">
-      <div class="research-left rv-l">
-        <p class="label" style="margin-bottom:16px">05 — Research</p>
-        <h2>Publications &amp;<br>Research Work</h2>
-        <p>Peer-reviewed contributions advancing multi-robot systems, autonomous navigation, and intelligent manipulation.</p>
+    <div class="research-header rv">
+      <p class="label">05 — Research</p>
+      <h2>Publications &amp; Research Work</h2>
+      <p>Peer-reviewed contributions advancing multi-robot systems, autonomous navigation, and intelligent manipulation. Each card shows the graphical abstract followed by a full description.</p>
+    </div>
+    <div class="paper-grid">
+
+      <div class="paper-card rv">
+        <div class="paper-abstract">
+          <img src="assets/paper1-abstract.jpg" alt="Graphical abstract"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="paper-abstract-ph" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Upload: <code>assets/paper1-abstract.jpg</code></span>
+          </div>
+        </div>
+        <div class="paper-meta"><span class="paper-yr">2024</span><span class="paper-type">Journal</span></div>
+        <div class="paper-body">
+          <h3>Expanding the Wrench Feasible Workspace of Quadrotor-Based Mobile Cable-Driven Parallel Manipulators Using Multi-Objective Optimization and Machine Learning</h3>
+          <p>A novel approach using quadrotors as mobile attachment points for cable-driven parallel manipulators. Multi-objective optimisation combined with machine learning to predict and maximise the wrench-feasible workspace under varying load and configuration conditions.</p>
+          <div class="paper-tags"><span class="paper-tag">Cable-Driven Robots</span><span class="paper-tag">Quadrotor</span><span class="paper-tag">ML</span><span class="paper-tag">Optimisation</span></div>
+          <a href="#" class="paper-link">Read Paper <span>→</span></a>
+        </div>
       </div>
-      <div class="research-right">
 
-        <div class="paper rv">
-          <div><div class="paper-yr">2024</div><div class="paper-type">Journal</div></div>
-          <div>
-            <h3>Expanding the Wrench Feasible Workspace of Quadrotor-Based Mobile Cable-Driven Parallel Manipulators Using Multi-Objective Optimization and Machine Learning</h3>
-            <p>A novel approach using quadrotors as mobile attachment points for cable-driven parallel manipulators. Multi-objective optimisation combined with machine learning to predict and maximise the wrench-feasible workspace under varying load and configuration conditions.</p>
-            <div class="paper-tags"><span class="paper-tag">Cable-Driven Robots</span><span class="paper-tag">Quadrotor</span><span class="paper-tag">ML</span><span class="paper-tag">Optimisation</span></div>
-            <a href="#" class="paper-link">Read Paper →</a>
+      <div class="paper-card rv">
+        <div class="paper-abstract">
+          <img src="assets/paper2-abstract.jpg" alt="Graphical abstract"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="paper-abstract-ph" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Upload: <code>assets/paper2-abstract.jpg</code></span>
           </div>
         </div>
-
-        <div class="paper rv">
-          <div><div class="paper-yr">2023</div><div class="paper-type">Conference</div></div>
-          <div>
-            <h3>Modelling and Simulation of Quadrotor-Based Cable-Driven Parallel Manipulator</h3>
-            <p>Complete simulation framework for a hybrid system integrating quadrotors with cable-driven parallel manipulators. Captures full dynamic coupling between aerial platforms and cable tensions, validated against physical prototypes.</p>
-            <div class="paper-tags"><span class="paper-tag">Simulation</span><span class="paper-tag">ROS</span><span class="paper-tag">Dynamics</span></div>
-            <a href="#" class="paper-link">Read Paper →</a>
-          </div>
+        <div class="paper-meta"><span class="paper-yr">2023</span><span class="paper-type">Conference</span></div>
+        <div class="paper-body">
+          <h3>Modelling and Simulation of Quadrotor-Based Cable-Driven Parallel Manipulator</h3>
+          <p>Complete simulation framework for a hybrid system integrating quadrotors with cable-driven parallel manipulators. Captures full dynamic coupling between aerial platforms and cable tensions, validated against physical prototypes in controlled environments.</p>
+          <div class="paper-tags"><span class="paper-tag">Simulation</span><span class="paper-tag">ROS</span><span class="paper-tag">Dynamics</span></div>
+          <a href="#" class="paper-link">Read Paper <span>→</span></a>
         </div>
-
-        <div class="paper rv">
-          <div><div class="paper-yr">2023</div><div class="paper-type">Journal</div></div>
-          <div>
-            <h3>Intelligent Path Control of Autonomous AGVs in Flexible Manufacturing Systems: A Reinforcement Learning Approach</h3>
-            <p>A reinforcement learning framework for dynamic path planning of AGVs in reconfigurable manufacturing environments — handling unpredictable obstacles and changing factory layouts without human re-programming.</p>
-            <div class="paper-tags"><span class="paper-tag">Reinforcement Learning</span><span class="paper-tag">AGV</span><span class="paper-tag">Path Planning</span><span class="paper-tag">Manufacturing</span></div>
-            <a href="#" class="paper-link">Read Paper →</a>
-          </div>
-        </div>
-
-        <div class="paper rv">
-          <div><div class="paper-yr">2022</div><div class="paper-type">Conference</div></div>
-          <div>
-            <h3>Sampling-Based Non-Planar Path Planner for Heterogeneous Multi-Robot Cable-Driven Manipulator Systems</h3>
-            <p>Sampling-based motion planning for heterogeneous multi-robot teams forming cable-driven manipulators. Handles non-planar 3D trajectories while respecting cable tension constraints and inter-robot collision avoidance.</p>
-            <div class="paper-tags"><span class="paper-tag">Path Planning</span><span class="paper-tag">Multi-Robot</span><span class="paper-tag">Sampling Methods</span></div>
-            <a href="#" class="paper-link">Read Paper →</a>
-          </div>
-        </div>
-
-        <div class="paper rv">
-          <div><div class="paper-yr">2022</div><div class="paper-type">Conference</div></div>
-          <div>
-            <h3>Modelling and Simulation of Fast Autonomous Exploration and Mapping System for GPS-Denied Unknown Environments Using ROS</h3>
-            <p>Fast autonomous exploration system combining frontier-based exploration with occupancy grid mapping, enabling robots to build complete maps of unknown GPS-denied spaces with minimal manual intervention.</p>
-            <div class="paper-tags"><span class="paper-tag">SLAM</span><span class="paper-tag">ROS</span><span class="paper-tag">Exploration</span><span class="paper-tag">GPS-Denied</span></div>
-            <a href="#" class="paper-link">Read Paper →</a>
-          </div>
-        </div>
-
       </div>
+
+      <div class="paper-card rv">
+        <div class="paper-abstract">
+          <img src="assets/paper3-abstract.jpg" alt="Graphical abstract"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="paper-abstract-ph" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Upload: <code>assets/paper3-abstract.jpg</code></span>
+          </div>
+        </div>
+        <div class="paper-meta"><span class="paper-yr">2023</span><span class="paper-type">Journal</span></div>
+        <div class="paper-body">
+          <h3>Intelligent Path Control of Autonomous AGVs in Flexible Manufacturing Systems: A Reinforcement Learning Approach</h3>
+          <p>A reinforcement learning framework for dynamic path planning of AGVs in reconfigurable manufacturing environments — handling unpredictable obstacles and changing factory layouts without human re-programming.</p>
+          <div class="paper-tags"><span class="paper-tag">Reinforcement Learning</span><span class="paper-tag">AGV</span><span class="paper-tag">Path Planning</span><span class="paper-tag">Manufacturing</span></div>
+          <a href="#" class="paper-link">Read Paper <span>→</span></a>
+        </div>
+      </div>
+
+      <div class="paper-card rv">
+        <div class="paper-abstract">
+          <img src="assets/paper4-abstract.jpg" alt="Graphical abstract"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="paper-abstract-ph" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Upload: <code>assets/paper4-abstract.jpg</code></span>
+          </div>
+        </div>
+        <div class="paper-meta"><span class="paper-yr">2022</span><span class="paper-type">Conference</span></div>
+        <div class="paper-body">
+          <h3>Sampling-Based Non-Planar Path Planner for Heterogeneous Multi-Robot Cable-Driven Manipulator Systems</h3>
+          <p>Sampling-based motion planning for heterogeneous multi-robot teams forming cable-driven manipulators. Handles non-planar 3D trajectories while respecting cable tension constraints and inter-robot collision avoidance simultaneously.</p>
+          <div class="paper-tags"><span class="paper-tag">Path Planning</span><span class="paper-tag">Multi-Robot</span><span class="paper-tag">Sampling Methods</span></div>
+          <a href="#" class="paper-link">Read Paper <span>→</span></a>
+        </div>
+      </div>
+
+      <div class="paper-card rv">
+        <div class="paper-abstract">
+          <img src="assets/paper5-abstract.jpg" alt="Graphical abstract"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <div class="paper-abstract-ph" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Upload: <code>assets/paper5-abstract.jpg</code></span>
+          </div>
+        </div>
+        <div class="paper-meta"><span class="paper-yr">2022</span><span class="paper-type">Conference</span></div>
+        <div class="paper-body">
+          <h3>Modelling and Simulation of Fast Autonomous Exploration and Mapping System for GPS-Denied Unknown Environments Using ROS</h3>
+          <p>Fast autonomous exploration combining frontier-based exploration with occupancy grid mapping — enabling robots to build complete maps of unknown GPS-denied spaces with minimal manual intervention.</p>
+          <div class="paper-tags"><span class="paper-tag">SLAM</span><span class="paper-tag">ROS</span><span class="paper-tag">Exploration</span><span class="paper-tag">GPS-Denied</span></div>
+          <a href="#" class="paper-link">Read Paper <span>→</span></a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1206,9 +1335,9 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
         </div>
       </div>
       <div class="c-items rv">
-        <a href="mailto:siddharthumakarthikeyan@gmail.com" class="c-item">
+        <a href="/cdn-cgi/l/email-protection#eb98828f8f838a999f839e868a808a999f8382808e928a85ab8c868a8287c5888486" class="c-item">
           <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-          <div><span class="c-lbl">Email</span><span class="c-val">siddharthumakarthikeyan@gmail.com</span></div>
+          <div><span class="c-lbl">Email</span><span class="c-val"><span class="__cf_email__" data-cfemail="f88b919c9c90998a8c908d959993998a8c9091939d819996b89f95999194d69b9795">[email&#160;protected]</span></span></div>
         </a>
         <a href="tel:+917010444381" class="c-item">
           <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6.29 6.29l1.15-1.15a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
@@ -1239,7 +1368,7 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 (function(){
   // Custom cursor
   const cur = document.getElementById('cursor');
@@ -1287,30 +1416,5 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
   },{threshold:.08,rootMargin:'0px 0px -24px 0px'});
   document.querySelectorAll('.rv,.rv-l').forEach(el=>io.observe(el));
 
-  // Skill accordion
-  document.querySelectorAll('.sk-trigger').forEach(t=>{
-    t.addEventListener('click',()=>{
-      const row=t.closest('.sk-row');
-      const wasOpen=row.classList.contains('open');
-      document.querySelectorAll('.sk-row').forEach(r=>r.classList.remove('open'));
-      if(!wasOpen) row.classList.add('open');
-    });
-  });
-
   // Video placeholders
-  document.querySelectorAll('.proj-visual iframe').forEach(f=>{
-    const ph=f.nextElementSibling;
-    if((f.src||'').includes('YOUR_VIDEO_ID')){
-      f.style.display='none';
-      if(ph) ph.style.display='flex';
-    } else {
-      if(ph) ph.style.display='none';
-    }
-  });
-
-  // Footer year
-  document.getElementById('yr').textContent=`© ${new Date().getFullYear()} Siddharth Umakarthikeyan, Ph.D.`;
-})();
-</script>
-</body>
-</html>
+  document.querySelectorAll('.proj-visual iframe').for
