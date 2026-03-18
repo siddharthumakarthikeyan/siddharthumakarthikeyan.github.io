@@ -708,10 +708,12 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
 @keyframes fUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
 @keyframes fIn  { from{opacity:0} to{opacity:1} }
 
-.rv { opacity:0; transform:translateY(28px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
-.rv.in { opacity:1; transform:none; }
-.rv-l { opacity:0; transform:translateX(-20px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
-.rv-l.in { opacity:1; transform:none; }
+.rv { opacity:1; transform:none; transition:opacity .7s var(--ease), transform .7s var(--ease); }
+.js-ready .rv { opacity:0; transform:translateY(28px); }
+.rv.in { opacity:1 !important; transform:none !important; }
+.rv-l { opacity:1; transform:none; transition:opacity .7s var(--ease), transform .7s var(--ease); }
+.js-ready .rv-l { opacity:0; transform:translateX(-20px); }
+.rv-l.in { opacity:1 !important; transform:none !important; }
 
 /* ═══════════════════════════════════════
    RESPONSIVE
@@ -867,7 +869,7 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
             GitHub
           </a>
-          <a href="/cdn-cgi/l/email-protection#4e3d272a2a262f3c3a263b232f252f3c3a2627252b372f200e29232f2722602d2123" class="alink">
+          <a href="mailto:siddharthumakarthikeyan@gmail.com" class="alink">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             Email
           </a>
@@ -973,7 +975,7 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
         <h3>Ready to transform your operations<br>with <em>intelligent robotics?</em></h3>
         <p>Let's discuss your project requirements and how autonomous systems can deliver measurable impact for your organisation.</p>
       </div>
-      <a href="/cdn-cgi/l/email-protection#b4c7ddd0d0dcd5c6c0dcc1d9d5dfd5c6c0dcdddfd1cdd5daf4d3d9d5ddd89ad7dbd9" class="btn-consult">
+      <a href="mailto:siddharthumakarthikeyan@gmail.com" class="btn-consult">
         Start a Conversation <span>→</span>
       </a>
     </div>
@@ -1335,9 +1337,9 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
         </div>
       </div>
       <div class="c-items rv">
-        <a href="/cdn-cgi/l/email-protection#eb98828f8f838a999f839e868a808a999f8382808e928a85ab8c868a8287c5888486" class="c-item">
+        <a href="mailto:siddharthumakarthikeyan@gmail.com" class="c-item">
           <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-          <div><span class="c-lbl">Email</span><span class="c-val"><span class="__cf_email__" data-cfemail="f88b919c9c90998a8c908d959993998a8c9091939d819996b89f95999194d69b9795">[email&#160;protected]</span></span></div>
+          <div><span class="c-lbl">Email</span><span class="c-val">siddharthumakarthikeyan@gmail.com</span></div>
         </a>
         <a href="tel:+917010444381" class="c-item">
           <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6.29 6.29l1.15-1.15a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
@@ -1368,8 +1370,9 @@ footer span { font-size:11.5px; color:rgba(255,255,255,.22); letter-spacing:.04e
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 (function(){
+  document.body.classList.add('js-ready');
   // Custom cursor
   const cur = document.getElementById('cursor');
   const ring = document.getElementById('cursor-ring');
