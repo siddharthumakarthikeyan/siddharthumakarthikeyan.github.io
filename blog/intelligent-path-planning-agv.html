@@ -33,11 +33,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
 .nback{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--mu);display:inline-flex;align-items:center;gap:6px;transition:color .2s}
 .nback:hover{color:var(--ac)}
 .nback svg{width:14px;height:14px}
-.bh{padding:120px 0 0;border-bottom:1px solid var(--ru)}
-.bw{width:100%;padding:0 5vw}
-.bhero-img{width:100%;position:relative;margin-top:40px;background:var(--cr);min-height:120px}
-.bhero-ph{display:flex;align-items:center;gap:12px;padding:28px 5vw;font-size:13px;color:var(--fa);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap}
-.bhero-ph code{font-size:12px;color:var(--ac)}
+.bh{padding:120px 0 48px;border-bottom:1px solid var(--ru)}
+.bw{width:100%;padding:0 5vw;display:flex;align-items:flex-start;gap:5vw}
+.bw-text{flex:1;min-width:0}
+.bw-img{width:340px;flex-shrink:0;border-radius:10px;overflow:hidden;background:var(--cr);border:1px solid var(--ru);align-self:center}
+.bw-img img{width:100%;height:260px;object-fit:cover;display:block}
+.bw-img-ph{width:100%;height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--fa);font-size:12px;text-align:center;padding:20px}
+.bw-img-ph svg{width:24px;height:24px;opacity:.2}
+.bw-img-ph code{font-size:11px;color:var(--ac)}
 .bcat{display:inline-flex;align-items:center;gap:8px;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ac);background:var(--al);padding:6px 14px;border-radius:100px;margin-bottom:22px}
 .bcat span{width:6px;height:6px;border-radius:50%;background:var(--ac);display:block}
 .bt{font-family:var(--fd);font-size:clamp(28px,4.5vw,48px);font-weight:500;line-height:1.1;margin-bottom:18px;color:var(--ink)}
@@ -110,7 +113,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
 .bfl{display:flex;gap:18px}
 .bfl a{font-size:12px;color:var(--fa);transition:color .2s}
 .bfl a:hover{color:var(--ac)}
-@media(max-width:600px){.nw,.bw,.bc,.bfw{padding:0 20px}.bcta{padding:28px 22px}.rtbl{font-size:12px}}
+@media(max-width:600px){.nw,.bc,.bfw{padding:0 20px}.bw{flex-direction:column;padding:0 20px}.bw-img{width:100%}.bcta{padding:28px 22px}.rtbl{font-size:12px}}
 </style>
 </head>
 <body>
@@ -130,34 +133,36 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
 
 <header class="bh">
   <div class="bw">
-    <div class="bcat"><span></span>Research · Scientific Reports (Nature)</div>
-    <h1 class="bt">Intelligent Path Planning for <em>Tow-Based AGVs</em> in Dynamic Manufacturing Environments</h1>
-    <p class="bsub">How we built a hybrid Dynamic Programming–LiDAR–TEB navigation stack that outperforms A*, Dijkstra and TEB planners — and validated it from simulation all the way to real hardware.</p>
-    <div class="bmeta">
-      <div class="bma">
-        <img src="../assets/profile.jpg" alt="Siddharth U"/>
-        <div>
-          <div class="bmaan">Siddharth Umakarthikeyan</div>
-          <div class="bmaai">Ph.D. Researcher · SASTRA University</div>
+    <div class="bw-text">
+      <div class="bcat"><span></span>Research · Scientific Reports (Nature)</div>
+      <h1 class="bt">Intelligent Path Planning for <em>Tow-Based AGVs</em> in Dynamic Manufacturing Environments</h1>
+      <p class="bsub">How we built a hybrid Dynamic Programming–LiDAR–TEB navigation stack that outperforms A*, Dijkstra and TEB planners — and validated it from simulation all the way to real hardware.</p>
+      <div class="bmeta">
+        <div class="bma">
+          <img src="../assets/profile.jpg" alt="Siddharth U"/>
+          <div>
+            <div class="bmaan">Siddharth Umakarthikeyan</div>
+            <div class="bmaai">Ph.D. Researcher · SASTRA University</div>
+          </div>
         </div>
+        <span class="bmd">Scientific Reports (Nature) · 2026 · Vol. 16, 3530</span>
+        <span class="bmt">12 min read</span>
       </div>
-      <span class="bmd">Scientific Reports (Nature) · 2026 · Vol. 16, 3530</span>
-      <span class="bmt">12 min read</span>
+      <div class="btgs">
+        <span class="btg">AGV</span>
+        <span class="btg">Path Planning</span>
+        <span class="btg">Dynamic Programming</span>
+        <span class="btg">LiDAR</span>
+        <span class="btg">ROS</span>
+        <span class="btg">MPC</span>
+        <span class="btg">Manufacturing</span>
+        <span class="btg">Scientific Reports</span>
+      </div>
     </div>
-    <div class="btgs">
-      <span class="btg">AGV</span>
-      <span class="btg">Path Planning</span>
-      <span class="btg">Dynamic Programming</span>
-      <span class="btg">LiDAR</span>
-      <span class="btg">ROS</span>
-      <span class="btg">MPC</span>
-      <span class="btg">Manufacturing</span>
-      <span class="btg">Scientific Reports</span>
+    <div class="bw-img">
+      <img src="../assets/agv-hero.jpg" alt="Tow-based AGV in manufacturing" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="bw-img-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Upload as<br><code>assets/agv-hero.jpg</code></span></div>
     </div>
-  </div>
-  <div class="bhero-img">
-    <img src="../assets/agv-hero.jpg" alt="Tow-based AGV in manufacturing" onerror="this.parentElement.style.display='none'" style="width:100%;height:420px;object-fit:cover;display:block"/>
-    <div class="bhero-ph" id="bhero-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="width:28px;height:28px;opacity:.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Upload a hero image as <code>assets/agv-hero.jpg</code></span></div>
   </div>
 </header>
 
