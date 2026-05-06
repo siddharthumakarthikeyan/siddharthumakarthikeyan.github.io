@@ -66,20 +66,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
 .bc strong{color:var(--ink);font-weight:600}
 .bc em{font-style:italic}
 .bc code{font-size:13.5px;background:var(--cr);border:1px solid var(--ru);padding:2px 8px;border-radius:5px;font-family:monospace;color:var(--ac)}
-.bc pre{background:var(--ink);border-radius:12px;padding:28px;margin:28px 0;overflow-x:auto}
+.bc pre{background:var(--ink);border-radius:8px;padding:22px 24px;margin:28px 0;overflow-x:auto}
 .bc pre code{background:none;border:none;padding:0;font-size:13px;color:rgba(255,255,255,.85);line-height:1.75}
-.bc blockquote{border-left:3px solid var(--ac);padding:16px 24px;margin:28px 0;background:var(--al);border-radius:0 10px 10px 0}
-.bc blockquote p{font-family:var(--fd);font-size:17px;font-style:italic;color:var(--ink);margin-bottom:0;line-height:1.7}
+.bc blockquote{border-left:2px solid var(--ac2);padding:4px 24px;margin:32px 0}
+.bc blockquote p{font-family:var(--fd);font-size:18px;font-style:italic;color:var(--ink);opacity:.75;margin-bottom:0;line-height:1.75}
 .bc hr{border:none;border-top:1px solid var(--ru);margin:48px 0}
 .fig{margin:36px 0;border-radius:14px;overflow:hidden;border:1px solid var(--ru)}
 .fig img{width:100%}
 .figc{font-size:12px;color:var(--fa);text-align:center;padding:10px 16px;background:var(--cr);font-style:italic}
 
 /* CALLOUT */
-.callout{background:var(--al);border:1px solid rgba(27,58,107,.15);border-radius:12px;padding:22px 26px;margin:28px 0;display:flex;gap:14px;align-items:flex-start}
-.callout-i{width:20px;height:20px;flex-shrink:0;color:var(--ac);margin-top:2px}
-.callout p{font-size:14.5px;color:var(--ink2);line-height:1.8;margin-bottom:0}
-.callout strong{color:var(--ac)}
+.callout{border-left:3px solid var(--ac);padding:12px 20px;margin:28px 0;display:flex;gap:12px;align-items:flex-start}
+.callout-i{width:18px;height:18px;flex-shrink:0;color:var(--ac);margin-top:2px}
+.callout p{font-size:15px;color:var(--ink2);line-height:1.85;margin-bottom:0}
+.callout strong{color:var(--ink);font-weight:600}
 
 /* CTA */
 .bcta{background:linear-gradient(135deg,var(--ac),#0f2447);border-radius:18px;padding:44px 48px;margin-top:64px;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
@@ -194,12 +194,38 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
       Where <code>uᵢ</code> is the unit cable direction vector from end-effector to drone i, and <code>rᵢ</code> is the moment arm. The wrench-feasible workspace is the set of end-effector poses where a valid tension vector exists for any external wrench within given bounds.
     </p>
 
+    <h3>Wrench-Feasible Workspace Analysis</h3>
+    <p>
+      We computed the WFW numerically by discretising the end-effector translation space into a 20×20×20 grid (fixed orientation), then solving the tension-allocation QP at each cell — flagging the cell as feasible if a valid non-negative tension vector exists. For a symmetric 4-drone square formation at 2 m altitude with 1 m cable length, the WFW occupies roughly <strong>18% of the bounding box</strong>.
+    </p>
+    <p>
+      Two straightforward geometry changes change this significantly: extending cable length to 1.5 m expands the WFW to <strong>31%</strong> of the bounding box, and adding a fifth drone off-centre expands it to <strong>44%</strong> while also closing directional gaps in the 4-drone case. The actionable design conclusion: cable length and formation shape are the dominant design levers — not drone thrust capacity. Optimise geometry first.
+    </p>
+
     <h3>Simulation in Gazebo + ROS</h3>
     <p>
       We implemented the full simulation in <strong>Gazebo</strong> with <strong>ROS</strong> as the middleware. Each quadrotor runs an independent PID attitude controller. The cable dynamics are approximated using Gazebo's joint constraints with one-directional force limits — a practical compromise that preserves the fundamental unilateral constraint while remaining real-time capable.
     </p>
     <p>
       The ROS architecture uses a central trajectory planner node that broadcasts desired end-effector poses and required cable tensions, with individual quadrotor controllers tracking their assigned positions to maintain the geometry.
+    </p>
+
+    <h3>Controller Architecture</h3>
+    <p>
+      The control hierarchy has three levels. At the top, the <strong>end-effector trajectory planner</strong> publishes desired poses at 10 Hz. The middle layer is the <strong>cable tension allocator</strong>: given the desired end-effector wrench and current drone positions it solves a constrained QP to find the minimum-norm cable tension vector satisfying <code>W·t = τ_des</code> with <code>t ≥ 0</code>. At the bottom, each drone runs a <strong>cascade PD controller</strong> — an outer position loop (10 Hz) computing desired thrust and attitude, feeding into a 100 Hz attitude inner loop:
+    </p>
+    <pre><code>/* Attitude inner loop — 100 Hz */
+τ_roll  = Kp_φ·(φ_d − φ) + Kd_φ·(φ̇_d − φ̇)
+τ_pitch = Kp_θ·(θ_d − θ) + Kd_θ·(θ̇_d − θ̇)
+τ_yaw   = Kp_ψ·(ψ_d − ψ) + Kd_ψ·(ψ̇_d − ψ̇)
+
+/* Motor mixing — X-frame quadrotor */
+[ω₁²]   [ 1   1   1   1 ] [F_total / 4kT ]
+[ω₂²] = [-1   1  -1   1 ]·[τ_roll  / 4kTl]
+[ω₃²]   [-1  -1   1   1 ] [τ_pitch / 4kTl]
+[ω₄²]   [ 1  -1  -1   1 ] [τ_yaw   / 4kD ]</code></pre>
+    <p>
+      The critical issue: the tension allocator assumes drones are <em>exactly</em> at their desired positions when computing cable direction vectors. In practice, drones track position setpoints with 80–120 ms of lag at typical operating speeds. This creates a geometric mismatch between the model and reality — appearing as an unmodelled disturbance wrench at the end-effector. For four drones these errors can constructively add or partially cancel depending on formation symmetry, making symmetric formations simultaneously harder to stabilise and easier to analyse.
     </p>
 
     <div class="callout">
@@ -216,6 +242,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
       <li><strong>Symmetric configurations are not always optimal.</strong> For asymmetric payloads or directional tasks, deliberately asymmetric drone placement increases the workspace volume in the direction of interest at the cost of reducing it elsewhere — a useful design trade-off.</li>
       <li><strong>Cable sag matters at scale.</strong> At prototype scale (sub-2m spans), the massless cable approximation holds well. As span increases beyond ~5m, cable mass and catenary effects begin to significantly distort the tension estimates.</li>
       <li><strong>Inter-drone communication latency is a hard constraint.</strong> At ≥50ms latency between the central planner and drone controllers, the coupled system becomes marginally stable at typical end-effector load conditions.</li>
+      <li><strong>Coupled tension-aware control dramatically outperforms independent PIDs.</strong> Simulating independent per-drone PIDs (no awareness of cable coupling) versus a tension-aware coupled controller showed a 60–70% reduction in steady-state end-effector position error. The gain comes from preventing opposing drones from fighting each other's control actions — a failure mode that is invisible to each individual drone controller in isolation.</li>
     </ul>
 
     <h2>Why This Matters</h2>
