@@ -157,15 +157,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
 <main class="bb">
   <article class="bc">
 
-    <p class="lead">Every morning, machines need feeding. Raw parts travel from storage to machining stations, assemblies move between production cells, finished components queue for dispatch. In a flexible manufacturing plant this choreography runs constantly — and for the most part, invisibly. Until something goes wrong.</p>
+    <p class="lead">Flexible manufacturing plants run on logistics. Parts move from storage to machining stations, assemblies travel between production cells, and finished components queue for dispatch — constantly, without supervision. When that material flow depends on autonomous vehicles, the navigation problem is deceptively hard: not because the environment is complex in isolation, but because it changes in ways no static planner anticipates.</p>
 
-    <h2>A Robot With a Trailer</h2>
+    <h2>The Vehicle — and What Makes It Hard</h2>
     <p>
-      The vehicle we built looks straightforward at first: a wheeled robot pulling a cart behind it. Tug-and-cart systems are everywhere in real manufacturing because they are mechanically simple and cheap to maintain. But that cart changes the navigation problem in ways that most path-planning research quietly ignores. It's attached off-axis, riding on four freely-swivelling caster wheels. As the robot turns, each caster pivots at its own rate. Take a corner too sharply and the trailer doesn't follow cleanly — it swings wide, threatens the production line on either side, or worse, jackknifes.
+      We built and tested this on a differential-drive tow-based AGV pulling a cart on an off-axis hitch, with four freely-swivelling caster wheels on the trailer. Tug-and-cart configurations are extremely common in real plants because they are mechanically simple and cheap to maintain. But the trailer changes the navigation problem in ways most path-planning research ignores. As the AGV turns, each caster pivots at its own rate. Take a corner too sharply and the trailer doesn't follow the robot body cleanly — it swings wide, encroaches on the production line on either side, or jackknifes at the coupling.
     </p>
     <div class="pq">"A path that looks perfectly smooth for the robot can still whip the trailer into the machinery beside it."</div>
 
-    <h2>The Environment It Had to Navigate</h2>
+    <h2>The Operating Constraints</h2>
     <p>
       The factory floor isn't a clean warehouse aisle. It's a 15 × 15 metre space where production workers move between workstations, other vehicles park and depart at unpredictable times, and the robot must stay inside a defined operational corridor at all times. Leaving that corridor — even briefly, even to dodge an obstacle — counts as a failure. Production lines run right up to the boundary on both sides.
     </p>
@@ -173,9 +173,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
       Existing planners struggle with this hard. A* and Dijkstra search for the shortest path in all available free space. They don't know what a "corridor" means — they'll route straight through a forbidden zone the moment an obstacle makes it locally optimal. TEB, the elastic-band planner widely used in ROS, generates smooth curves but provides no guarantee about staying inside a boundary. We tested all three. Every one exited the operating corridor under obstacle pressure at some point.
     </p>
 
-    <h2>Three Layers, One Idea</h2>
+    <h2>A Three-Layer Navigation Architecture</h2>
     <p>
-      The insight behind our approach is that navigation is really three separate problems happening at different speeds — and trying to solve all three with a single algorithm is why existing planners break down under real conditions.
+      Rather than using a single planner, we separated navigation into three layers, each handling a distinct sub-problem at a different time horizon and spatial scale.
     </p>
     <p>
       At the top sits a <strong>strategic question</strong>: given a goal across the factory floor, which sequence of via-points should the robot follow? This only needs to run when something changes — a blocked route, a new task. We solved it with Dynamic Programming across a graph of predefined checkpoints scattered through the floor. The algorithm finds the optimal sequence in milliseconds. Crucially, arriving at each checkpoint resets the localisation uncertainty — preventing the position drift that accumulates silently over long LiDAR-only runs.
@@ -192,12 +192,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
       <div><span class="fig-label">System overview</span><p>Upload Fig. 2 from the paper as <code>../assets/blog2-fig1.jpg</code></p></div>
     </div>
 
-    <h2>The Test</h2>
+    <h2>Simulation Results</h2>
     <p>
-      We ran all four planners — A*, Dijkstra, TEB alone, and our approach — through the same scenario: a simulated shop floor with 11 checkpoints, cube-shaped machinery obstacles, and human avatars crossing the AGV routes at random intervals. The task: navigate from A to I reliably.
+      We ran all four planners — A*, Dijkstra, TEB alone, and the proposed approach — through the same scenario: a 15 × 15 m CoppeliaSim environment with 11 checkpoints, static machinery obstacles, and human avatars crossing the AGV routes at random. The task: navigate reliably from A to I, staying inside the defined corridor throughout.
     </p>
     <p>
-      A* and Dijkstra both produced paths with visible kinks — moments where replanning caused sudden direction reversals. For a solo robot that's ugly but survivable. For a tow vehicle it's dangerous: the trailer overshoots the turn and swings toward the boundary. In several runs it crossed it entirely. Dijkstra was worse; in longer missions it produced what we started calling "knots" — configurations where the planned path looped back on itself and the trailer geometry became irrecoverable without operator intervention.
+      A* and Dijkstra both produced paths with visible kinks — moments where replanning caused abrupt direction reversals. For a solo robot that's manageable. For a tow vehicle it's dangerous: the trailer overshoots the turn and swings toward the corridor boundary. In several runs it crossed it entirely. Dijkstra was worse in longer missions, producing path configurations where replanning looped the trajectory back on itself — a condition where trailer geometry becomes irrecoverable without operator intervention.
     </p>
     <p>
       TEB did much better on smoothness but struggled whenever a dynamic obstacle forced its elastic band to deform. It deformed in whatever direction reduced energy — often directly into the virtual boundary.
@@ -256,12 +256,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
       We also scaled up to 10 AGVs running simultaneously on the same floor. DP computation climbed from 12 ms to 17 ms — still well inside real-time limits. Boundary violations remained zero across every fleet size tested.
     </p>
 
-    <h2>Off the Screen, Onto the Floor</h2>
+    <h2>Hardware Validation</h2>
     <p>
-      Simulation can lie. So we built the actual hardware, set up a physical course matching the simulated layout, and ran all four planners again. An Intel NUC i5 handles the onboard computation. A single RPLidar A1M8 provides all obstacle sensing. AprilTag markers on the trailer front are read by a rear-facing camera to give the controller live hitch angle data.
+      Simulation results need to be confirmed on real hardware. We built the actual AGV with trailer, set up a physical test environment matching the CoppeliaSim layout, and ran all four planners on the real robot. Onboard: Intel NUC i5 for computation, a single RPLidar A1M8 for all obstacle sensing, and a rear-facing camera reading AprilTag markers on the trailer to give the controller live hitch angle data.
     </p>
     <p>
-      The hardware results tracked the simulation closely — and in some ways told a starker story. A* and Dijkstra's knot problem was visibly worse on the real robot, because the caster dynamics the simulator only approximated amplified every sudden direction change in ways you could see. The proposed planner's paths were smooth enough that the trailer followed predictably every time. When we deliberately blocked the G→H segment mid-mission, the planner rerouted to G→K→L→M→H without a single operator prompt.
+      The hardware results matched the simulation closely — and in some respects were more revealing. The caster dynamics that the simulator approximated analytically were fully physical here, and they amplified every abrupt direction change in A* and Dijkstra paths visibly. The proposed planner's trajectories were smooth enough that the trailer followed predictably through every run. When we deliberately blocked the G→H segment mid-mission, the system rerouted to G→K→L→M→H without operator input.
     </p>
 
     <div class="fig-ph">
@@ -269,9 +269,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,
       <div><span class="fig-label">Hardware setup and path results</span><p>Upload Fig. 15 from the paper as <code>../assets/blog2-fig5.jpg</code></p></div>
     </div>
 
-    <h2>What It All Adds Up To</h2>
+    <h2>Key Takeaways</h2>
     <p>
-      There are smarter, more computationally powerful approaches to AGV navigation. Some use deep reinforcement learning trained on millions of simulated interactions. Some fuse LiDAR with depth cameras and IMUs for centimetre-level localisation. This isn't any of those. It's a system built around the actual constraints of deploying in a real plant on a real budget: one sensor, an off-the-shelf computer, and no tolerance for a robot that drifts outside its lane.
+      There are more powerful approaches to AGV navigation — deep reinforcement learning, multi-sensor fusion, centimetre-level SLAM. This work isn't competing with those. It's designed around the practical constraints of real plant deployment: one sensor, a standard single-board computer, and a hard requirement that the vehicle never drifts outside its designated corridor.
     </p>
     <p>
       What makes it work is the separation of concerns. Strategic replanning doesn't happen fifty times a second — it happens when the situation actually changes. Human avoidance doesn't require a full replan — it requires a speed adjustment. Local execution doesn't need to solve the global problem — it just needs to follow the checkpoints cleanly. Put those three things together and you get a system that is faster than A*, smoother than TEB, and safer than both. With a trailer attached.
