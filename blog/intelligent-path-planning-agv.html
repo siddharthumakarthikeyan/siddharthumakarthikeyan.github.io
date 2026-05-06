@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Intelligent Path Planning for Tow-Based AGVs in Manufacturing — Siddharth U</title>
+<meta name="description" content="Deep-dive into our Scientific Reports (Nature) paper on a hybrid DP–LiDAR–TEB navigation stack for autonomous tow-based AGVs in dynamic flexible manufacturing environments."/>
+<link rel="icon" type="image/x-icon" href="../assets/favicon.ico"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --w:#FFFFFF;--cr:#F8F7F4;--iv:#F0EDE6;--ru:#E4E1DA;
+  --ink:#151515;--ink2:#2C2C2C;--mu:#6E6E6E;--fa:#B0ADAA;
+  --ac:#1B3A6B;--ac2:#C47B2B;--al:#EBF0F9;
+  --fd:'Playfair Display',Georgia,serif;
+  --fb:'Manrope',system-ui,sans-serif;
+  --ez:cubic-bezier(.22,1,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--w);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+::selection{background:var(--ac);color:#fff}
+nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(255,255,255,.97);backdrop-filter:blur(18px);border-bottom:1px solid var(--ru);padding:14px 0}
+.nw{max-width:780px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between}
+.nb{display:flex;align-items:center;gap:10px}
+.nph{width:30px;height:30px;border-radius:50%;overflow:hidden;border:1.5px solid var(--ru)}
+.nph img{width:100%;height:100%;object-fit:cover}
+.nnm{font-family:var(--fd);font-size:16px;font-weight:500}
+.nnm em{font-style:italic;color:var(--ac)}
+.nback{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--mu);display:inline-flex;align-items:center;gap:6px;transition:color .2s}
+.nback:hover{color:var(--ac)}
+.nback svg{width:14px;height:14px}
+.bh{padding:120px 0 64px;border-bottom:1px solid var(--ru)}
+.bw{max-width:780px;margin:0 auto;padding:0 28px}
+.bcat{display:inline-flex;align-items:center;gap:8px;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ac);background:var(--al);padding:6px 14px;border-radius:100px;margin-bottom:22px}
+.bcat span{width:6px;height:6px;border-radius:50%;background:var(--ac);display:block}
+.bt{font-family:var(--fd);font-size:clamp(28px,4.5vw,48px);font-weight:500;line-height:1.1;margin-bottom:18px;color:var(--ink)}
+.bt em{font-style:italic;color:var(--ac)}
+.bsub{font-size:17px;font-weight:300;color:var(--mu);line-height:1.8;max-width:640px;margin-bottom:28px}
+.bmeta{display:flex;flex-wrap:wrap;align-items:center;gap:18px}
+.bma{display:flex;align-items:center;gap:8px}
+.bma img{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1.5px solid var(--ru)}
+.bmaan{font-size:13px;font-weight:600;color:var(--ink2)}
+.bmaai{font-size:11px;color:var(--fa)}
+.bmd{font-size:11.5px;color:var(--fa);padding-left:18px;border-left:1px solid var(--ru)}
+.bmt{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--fa);padding-left:18px;border-left:1px solid var(--ru)}
+.btgs{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px}
+.btg{font-size:11px;font-weight:600;color:var(--ac);background:var(--al);padding:4px 12px;border-radius:100px;border:1px solid rgba(27,58,107,.1)}
+.bb{padding:64px 0 100px}
+.bc{max-width:700px;margin:0 auto;padding:0 28px}
+.bc h2{font-family:var(--fd);font-size:clamp(22px,2.8vw,32px);font-weight:500;line-height:1.2;margin:56px 0 16px;color:var(--ink)}
+.bc h2 em{font-style:italic;color:var(--ac)}
+.bc h3{font-family:var(--fd);font-size:clamp(17px,2vw,22px);font-weight:500;margin:36px 0 12px;color:var(--ink)}
+.bc p{font-size:16px;color:var(--ink2);line-height:1.9;margin-bottom:18px}
+.bc ul,.bc ol{margin:0 0 18px 22px}
+.bc li{font-size:16px;color:var(--ink2);line-height:1.9;margin-bottom:8px}
+.bc strong{color:var(--ink);font-weight:600}
+.bc em{font-style:italic}
+.bc code{font-size:13.5px;background:var(--cr);border:1px solid var(--ru);padding:2px 8px;border-radius:5px;font-family:monospace;color:var(--ac)}
+.bc pre{background:var(--ink);border-radius:12px;padding:28px;margin:28px 0;overflow-x:auto}
+.bc pre code{background:none;border:none;padding:0;font-size:13px;color:rgba(255,255,255,.85);line-height:1.8}
+.bc blockquote{border-left:3px solid var(--ac);padding:16px 24px;margin:28px 0;background:var(--al);border-radius:0 10px 10px 0}
+.bc blockquote p{font-family:var(--fd);font-size:17px;font-style:italic;color:var(--ink);margin-bottom:0;line-height:1.7}
+.bc hr{border:none;border-top:1px solid var(--ru);margin:48px 0}
+.fig{margin:36px 0;border-radius:14px;overflow:hidden;border:1px solid var(--ru)}
+.fig img{width:100%}
+.fig-ph{margin:36px 0;border-radius:14px;background:var(--cr);border:1.5px dashed var(--ru);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:52px 28px;text-align:center;color:var(--fa)}
+.fig-ph svg{width:28px;height:28px;opacity:.3}
+.fig-ph .fig-label{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);margin-bottom:4px}
+.fig-ph p{font-size:13px;line-height:1.6;max-width:300px}
+.figc{font-size:12px;color:var(--fa);text-align:center;padding:10px 16px;background:var(--cr);font-style:italic;border-top:1px solid var(--ru)}
+.callout{background:var(--al);border:1px solid rgba(27,58,107,.15);border-radius:12px;padding:22px 26px;margin:28px 0;display:flex;gap:14px;align-items:flex-start}
+.callout-i{width:20px;height:20px;flex-shrink:0;color:var(--ac);margin-top:2px}
+.callout p{font-size:14.5px;color:var(--ink2);line-height:1.8;margin-bottom:0}
+.callout strong{color:var(--ac)}
+.callout-warn{background:#FFF8F0;border-color:rgba(196,123,43,.25)}
+.callout-warn .callout-i{color:var(--ac2)}
+
+/* Results table */
+.rtbl{width:100%;border-collapse:collapse;margin:28px 0;font-size:14px}
+.rtbl th{background:var(--ac);color:#fff;font-weight:600;letter-spacing:.04em;padding:11px 14px;text-align:left;font-size:12px;text-transform:uppercase}
+.rtbl td{padding:10px 14px;border-bottom:1px solid var(--ru);color:var(--ink2);line-height:1.5}
+.rtbl tr:nth-child(even) td{background:var(--cr)}
+.rtbl tr.highlight td{background:var(--al);font-weight:600;color:var(--ac)}
+.rtbl-wrap{margin:28px 0;border-radius:12px;overflow:hidden;border:1px solid var(--ru)}
+.rtbl-wrap .rtbl{margin:0}
+
+.bcta{background:linear-gradient(135deg,var(--ac),#0f2447);border-radius:18px;padding:44px 48px;margin-top:64px;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
+.bcta h3{font-family:var(--fd);font-size:clamp(20px,2.5vw,28px);font-weight:500;color:#fff;line-height:1.2;margin-bottom:6px}
+.bcta h3 em{font-style:italic;color:var(--ac2)}
+.bcta p{font-size:14px;color:rgba(255,255,255,.55)}
+.bcta-btn{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;background:#fff;color:var(--ac);padding:14px 26px;border-radius:100px;white-space:nowrap;transition:all .2s}
+.bcta-btn:hover{background:var(--ac2);color:#fff;transform:translateY(-2px)}
+.bf{border-top:1px solid var(--ru);padding:28px 0}
+.bfw{max-width:780px;margin:0 auto;padding:0 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.bfw span{font-size:12px;color:var(--fa)}
+.bfl{display:flex;gap:18px}
+.bfl a{font-size:12px;color:var(--fa);transition:color .2s}
+.bfl a:hover{color:var(--ac)}
+@media(max-width:600px){.nw{padding:0 18px}.bw,.bc{padding:0 18px}.bcta{padding:28px 22px}.rtbl{font-size:12px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nw">
+    <div class="nb">
+      <div class="nph"><img src="../assets/profile.jpg" alt="Siddharth U"/></div>
+      <span class="nnm">Siddharth <em>U</em></span>
+    </div>
+    <a href="../index.html#blog" class="nback">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Blog
+    </a>
+  </div>
+</nav>
+
+<header class="bh">
+  <div class="bw">
+    <div class="bcat"><span></span>Research · Scientific Reports (Nature)</div>
+    <h1 class="bt">Intelligent Path Planning for<br><em>Tow-Based AGVs</em> in Dynamic<br>Manufacturing Environments</h1>
+    <p class="bsub">How we built a hybrid Dynamic Programming–LiDAR–TEB navigation stack that outperforms A*, Dijkstra and TEB planners — and validated it from simulation all the way to real hardware.</p>
+    <div class="bmeta">
+      <div class="bma">
+        <img src="../assets/profile.jpg" alt="Siddharth U"/>
+        <div>
+          <div class="bmaan">Siddharth Umakarthikeyan</div>
+          <div class="bmaai">Ph.D. Researcher · SASTRA University</div>
+        </div>
+      </div>
+      <span class="bmd">Scientific Reports (Nature) · 2026 · Vol. 16, 3530</span>
+      <span class="bmt">12 min read</span>
+    </div>
+    <div class="btgs">
+      <span class="btg">AGV</span>
+      <span class="btg">Path Planning</span>
+      <span class="btg">Dynamic Programming</span>
+      <span class="btg">LiDAR</span>
+      <span class="btg">ROS</span>
+      <span class="btg">MPC</span>
+      <span class="btg">Manufacturing</span>
+      <span class="btg">Scientific Reports</span>
+    </div>
+  </div>
+</header>
+
+<main class="bb">
+  <article class="bc">
+
+    <h2>The Problem on the Shop Floor</h2>
+    <p>
+      Flexible Manufacturing Systems (FMS) rely on Autonomous Guided Vehicles to move materials between storage units, production lines, and warehouse areas. Get that logistics layer right and you get repeatable, low-error material flow at scale. Get it wrong and you get collisions, blocked aisles, and expensive downtime.
+    </p>
+    <p>
+      The challenge is that real manufacturing floors are <strong>not static</strong>. Humans move through them. Other vehicles stop and start unexpectedly. Production layouts change. The AGV needs to navigate all of this reliably — without an expensive sensor suite, without leaving its designated operational corridor, and without getting stuck.
+    </p>
+    <p>
+      Most existing approaches fall short in at least one of these dimensions. Line-following is cheap but completely inflexible. LiDAR-only odometry accumulates error over time. Camera-based SLAM is computationally expensive and sensitive to illumination. Classical planners like A* and Dijkstra plan in all available free space — they'll exit the virtual operating boundary the moment an obstacle forces a detour.
+    </p>
+
+    <blockquote>
+      <p>The real requirement isn't just obstacle avoidance — it's <em>controlled</em> obstacle avoidance: stay within boundaries, pass through required waypoints, and do it with a trailer attached.</p>
+    </blockquote>
+
+    <h2>The System: <em>DDTMR — A Tow-Based AGV with a Trailer</em></h2>
+    <p>
+      We built and tested this on a <strong>Differential Drive Tow-Based Mobile Robot (DDTMR)</strong> — an AGV towing an off-axle trailer equipped with four caster wheels. This configuration is extremely common in real manufacturing (think of the tug-and-cart systems in automotive plants), but it introduces significant modelling complexity that most path planning papers ignore.
+    </p>
+    <p>
+      The trailer's four caster wheels swivel freely. As the AGV turns, each caster undergoes its own swivel dynamics — and as the coupling distance increases, the swivel effect amplifies. This <strong>caster-swivel coupling</strong> means a path that looks smooth for the AGV body can still cause the trailer to behave unpredictably. We derived the full dynamic model — kinetic energy, Lagrangian dynamics, Coriolis terms — explicitly accounting for each caster's swivel rate as a function of the AGV velocity and heading.
+    </p>
+
+    <div class="fig-ph">
+      <div class="fig-label">Fig. 1 — System Overview</div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p>Side view and top view of the DDTMR towing a trailer with four caster wheels. Upload screenshot from Fig. 2 of the paper to <code>../assets/blog2-fig1.jpg</code></p>
+    </div>
+
+    <p>
+      The hardware setup used for experiments consists of:
+    </p>
+    <ul>
+      <li><strong>Intel NUC i5 (10th Gen)</strong> — the onboard processing unit</li>
+      <li><strong>RPLidar A1M8</strong> — 360° 2D LiDAR, 12 m range, sole navigation sensor</li>
+      <li><strong>LattePanda 5MP UVC Camera</strong> — for AprilTag-based trailer pose estimation</li>
+      <li><strong>APC Back-UPS 110</strong> — for sustained runtime during experiments</li>
+      <li><strong>ROS</strong> as the middleware stack throughout</li>
+    </ul>
+
+    <h2>The Hybrid Navigation Stack</h2>
+    <p>
+      Rather than using a single planner, we designed a <strong>three-layer hybrid architecture</strong>. Each layer handles a distinct sub-problem at a different time horizon and spatial scale.
+    </p>
+
+    <h3>Layer 1 — Global Path Selection via Dynamic Programming</h3>
+    <p>
+      The shop floor is represented as a <strong>multistage graph</strong> of Key Points (KPs) — predefined via-nodes the AGV must pass through to move materials safely. The graph encodes costs based on distance between nodes, travel time, frequency of dynamic obstacles along a segment, and preferred routes.
+    </p>
+    <p>
+      We use <strong>Dynamic Programming with Bellman optimality</strong> to find the minimum-cost sequence of KPs from start to goal. The key advantage: because the AGV is constrained to navigate KP-to-KP, the accumulated localization error is corrected at each KP — preventing the drift that kills pure-odometry approaches over long runs. The DP cost map is also updated online when obstacles block segments, triggering a replan from the current KP.
+    </p>
+
+    <div class="fig-ph">
+      <div class="fig-label">Fig. 2 — Multistage Graph</div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p>The DP multistage graph with key point coordinates and edge costs. Upload Fig. 8 from the paper to <code>../assets/blog2-fig2.jpg</code></p>
+    </div>
+
+    <h3>Layer 2 — LiDAR-Based Obstacle Classification</h3>
+    <p>
+      Between KPs, the AGV uses only the LiDAR scan to classify obstacles in its immediate environment. The classification is based on <strong>time-history of laser scan returns</strong>:
+    </p>
+    <ul>
+      <li><strong>Static obstacle</strong> — returns remain fixed over successive scans. The AGV switches to a modified TEB local planner and attempts a path within the virtual boundary. If no valid path exists, the AGV backtracks to the previous KP and replans.</li>
+      <li><strong>Dynamic obstacle</strong> — returns move between scans (humans, other vehicles). The AGV computes a <strong>velocity adjustment factor S<sub>a</sub></strong> based on the obstacle's distance and approach direction, smoothly modulating speed to wait out or avoid the obstacle without leaving its operational corridor.</li>
+    </ul>
+    <p>
+      The velocity factor lookup covers 13 spatial regions per obstacle type (static, dynamic toward-center, dynamic away-from-center), calibrated empirically. This avoids the computational cost of re-running the full planner every time a human steps nearby.
+    </p>
+
+    <div class="callout">
+      <svg class="callout-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p><strong>Key design choice:</strong> Using LiDAR only — not camera, not fused sensors. The goal was a practical, low-cost solution deployable on budget AGVs. The RPLidar A1M8 costs a fraction of a depth camera and is illumination-independent, making it far more robust in real manufacturing settings where lighting varies throughout the day.</p>
+    </div>
+
+    <h3>Layer 3 — Modified TEB Local Planner + MPC Controller</h3>
+    <p>
+      For executing the KP-to-KP trajectory, we use a <strong>modified Timed Elastic Band (TEB) planner</strong> with a custom cost function:
+    </p>
+    <pre><code>Cost = w₁·Distance + w₂·Smoothness + w₃·ObstacleAvoidance
+      + w₄·Velocity + w₅·Acceleration</code></pre>
+    <p>
+      The weights are tuned to prioritise boundary compliance over raw speed — ensuring the DDTMR stays within its virtual operating corridor even when avoiding obstacles. Trajectory execution is handled by a <strong>Model Predictive Controller (MPC)</strong> implemented in MATLAB, which takes the DP-generated KP sequence and computes the required motor torques, feeding back velocity commands to ROS.
+    </p>
+    <p>
+      <strong>AprilTag-based trailer localisation</strong> provides the trailer's pose estimate — the rear-facing camera detects tags mounted on the trailer front, giving real-time hitch angle and offset data used by the MPC to prevent trailer jackknifing during tight manoeuvres.
+    </p>
+
+    <h2>Simulation Experiments</h2>
+    <p>
+      We validated the approach in a <strong>15 m × 15 m CoppeliaSim environment</strong> connected to ROS via a ROS–CoppeliaSim interface. The environment included:
+    </p>
+    <ul>
+      <li>Cube-shaped static obstacles representing machinery and production line segments</li>
+      <li>Human avatar models as dynamic obstacles, following paths that intersect the AGV's routes</li>
+      <li>11 key points (A through K) as the navigation graph, with the DDTMR tasked to navigate A → I via optimal KP sequences</li>
+      <li>Virtual path boundaries defining the drivable corridor — violations count as failures</li>
+    </ul>
+
+    <div class="fig-ph">
+      <div class="fig-label">Fig. 3 — Simulation Environment</div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p>CoppeliaSim environment with static and dynamic obstacles (left) and virtual path boundaries with key points (right). Upload Fig. 7 from the paper to <code>../assets/blog2-fig3.jpg</code></p>
+    </div>
+
+    <h3>Path Comparison: Proposed vs A*, Dijkstra, TEB</h3>
+    <p>
+      The same scenario was run with four planners. The results are stark:
+    </p>
+    <ul>
+      <li><strong>A*</strong> — plans in all available free space, frequently exits the virtual boundary, produces non-smooth paths that stress the trailer coupling</li>
+      <li><strong>Dijkstra</strong> — similar to A* but additionally creates <em>knots</em> in the path when replanning around dynamic obstacles — a particularly dangerous condition for a tow-based vehicle where the trailer can jackknife</li>
+      <li><strong>TEB alone</strong> — produces smooth paths but provides no guarantee of staying within the virtual operating boundary</li>
+      <li><strong>Proposed DP–LiDAR–TEB</strong> — stays within the boundary in 97% of runs, produces the smoothest path, and replans cleanly when a static obstacle blocks the planned route entirely</li>
+    </ul>
+
+    <div class="fig-ph">
+      <div class="fig-label">Fig. 4 — Path Comparison</div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p>Paths followed by the DDTMR using each planner in the presence of static and dynamic obstacles. Upload Fig. 9 from the paper to <code>../assets/blog2-fig4.jpg</code></p>
+    </div>
+
+    <h3>Quantitative Results</h3>
+    <div class="rtbl-wrap">
+      <table class="rtbl">
+        <thead>
+          <tr>
+            <th>Planner</th>
+            <th>Avg. Path (m)</th>
+            <th>Travel Time (s)</th>
+            <th>Collision Rate</th>
+            <th>Path Smoothness (Var ω)</th>
+            <th>Boundary Violations</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>A*</td><td>15.6 ± 1.0</td><td>118 ± 11</td><td>14%</td><td>0.085 ± 0.017</td><td>16%</td></tr>
+          <tr><td>Dijkstra</td><td>16.1 ± 1.2</td><td>125 ± 13</td><td>18%</td><td>0.093 ± 0.019</td><td>22%</td></tr>
+          <tr><td>TEB only</td><td>13.9 ± 0.7</td><td>98 ± 9</td><td>6%</td><td>0.064 ± 0.013</td><td>11%</td></tr>
+          <tr class="highlight"><td>Proposed</td><td>12.9 ± 0.6</td><td>91 ± 8</td><td>2%</td><td>0.059 ± 0.012</td><td>3%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      The proposed planner achieves the <strong>shortest average path</strong>, <strong>fastest travel time</strong>, and <strong>lowest collision and boundary violation rates</strong> across all planners tested — while operating with only a single LiDAR sensor.
+    </p>
+
+    <h3>Statistical Validation — 30 Randomised Trials</h3>
+    <p>
+      To ensure the results weren't cherry-picked, we ran each planner across <strong>30 independent trials</strong> with randomised obstacle positions, dynamic obstacle trajectories, and start–goal pairs. The key finding: the proposed method not only achieves better mean performance but dramatically <strong>lower variance</strong>.
+    </p>
+    <div class="rtbl-wrap">
+      <table class="rtbl">
+        <thead>
+          <tr>
+            <th>Planner</th>
+            <th>Mission Time µ ± σ (s)</th>
+            <th>Path Overhead µ ± σ (%)</th>
+            <th>Min Clearance (m)</th>
+            <th>Global Replans</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight"><td>Proposed (DP–RL–TEB)</td><td>38.2 ± 1.9</td><td>4.3 ± 0.7</td><td>2.41 ± 0.12</td><td>1.1 ± 0.3</td></tr>
+          <tr><td>TEB only</td><td>46.7 ± 4.8</td><td>9.8 ± 2.4</td><td>2.05 ± 0.21</td><td>4.6 ± 1.7</td></tr>
+          <tr><td>A*</td><td>58.1 ± 6.1</td><td>14.2 ± 3.5</td><td>1.76 ± 0.31</td><td>8.3 ± 2.2</td></tr>
+          <tr><td>Dijkstra</td><td>61.4 ± 6.7</td><td>16.7 ± 4.1</td><td>1.72 ± 0.34</td><td>9.1 ± 2.4</td></tr>
+          <tr><td>PPO (Deep RL)</td><td>49.6 ± 6.2</td><td>11.3 ± 2.9</td><td>2.08 ± 0.26</td><td>5.2 ± 1.8</td></tr>
+          <tr><td>SAC (Deep RL)</td><td>52.1 ± 7.0</td><td>12.1 ± 3.1</td><td>1.97 ± 0.28</td><td>6.0 ± 2.1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <svg class="callout-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p><strong>Variance is the real metric for safety-critical systems.</strong> The proposed planner's variance in mission time (σ² = 3.61) is <strong>4–12× lower</strong> than classical planners and 2–5× lower than TEB alone. In a manufacturing environment, unpredictable behaviour is often more dangerous than slow behaviour.</p>
+    </div>
+
+    <h2>Robustness: Dynamic Obstacle Scenarios</h2>
+    <p>
+      We tested four specific dynamic obstacle scenarios to validate the velocity adjustment logic:
+    </p>
+    <ul>
+      <li><strong>Case 1</strong> — Obstacle approaches from the rear, enters the supercritical zone, then retreats. The planner smoothly ramps the velocity factor down and back up.</li>
+      <li><strong>Case 2</strong> — Obstacle enters gradually, reaches supercritical, then exits directly from it. The planner ensures no sharp velocity transitions — a smooth, gradual response.</li>
+      <li><strong>Case 3 &amp; 4</strong> — Obstacle appears suddenly in a critical or supercritical region (a human who steps out from behind a machine). The AGV must react immediately without collision, while maintaining a smooth velocity profile to protect the trailer coupling.</li>
+    </ul>
+    <p>
+      In all four cases the planner generated appropriate velocity factors, the DDTMR avoided collision, and no boundary violations occurred.
+    </p>
+
+    <h2>Multi-AGV Scaling</h2>
+    <p>
+      We also evaluated scalability by running 1, 3, 5, and 10 AGVs simultaneously in the same shop floor, with shared cost-map updates and decentralised TEB execution per agent.
+    </p>
+    <div class="rtbl-wrap">
+      <table class="rtbl">
+        <thead>
+          <tr><th>Metric</th><th>1 AGV</th><th>3 AGVs</th><th>5 AGVs</th><th>10 AGVs</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>DP Computation (ms)</td><td>12</td><td>13.3</td><td>14.5</td><td>17.1</td></tr>
+          <tr><td>TEB Cycle Time (ms)</td><td>46</td><td>47</td><td>48</td><td>50</td></tr>
+          <tr><td>Boundary Violations</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>Mission Throughput (missions/min)</td><td>1.00</td><td>0.97</td><td>0.94</td><td>0.88</td></tr>
+          <tr><td>CPU Utilisation</td><td>11%</td><td>19%</td><td>26%</td><td>41%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Communication overhead grows linearly with fleet size. DP computation degrades gracefully from 12 ms to 17 ms across the 1-to-10 range. <strong>Zero boundary violations at any fleet size</strong>. The mission throughput drop at 10 AGVs (0.88 vs 1.0) reflects natural congestion — not system failure.
+    </p>
+
+    <h2>Hardware Validation</h2>
+    <p>
+      Simulation results alone aren't enough. We built the actual DDTMR with trailer, created a physical test environment matching the CoppeliaSim layout, and ran all four planners on real hardware.
+    </p>
+
+    <div class="fig-ph">
+      <div class="fig-label">Fig. 5 — Hardware Setup</div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p>Real DDTMR hardware setup (left) and AprilTag deployment on the trailer for pose estimation (right). Upload Fig. 15 from the paper to <code>../assets/blog2-fig5.jpg</code></p>
+    </div>
+
+    <p>
+      The hardware results mirrored the simulation findings:
+    </p>
+    <ul>
+      <li>A* and Dijkstra produced non-smooth paths with knots — particularly problematic when the trailer had to follow the same trajectory</li>
+      <li>TEB produced smoother motion but missed several KPs and exited the virtual boundary under dynamic obstacle pressure</li>
+      <li>The proposed planner successfully passed through all via points, produced smooth trajectories, and — when a static obstacle completely blocked the path between G and H — cleanly replanned to G→K→L→M→H without operator intervention</li>
+    </ul>
+
+    <div class="fig-ph">
+      <div class="fig-label">Fig. 6 — Hardware Path Results</div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p>Hardware paths for all four planners showing the proposed method's boundary compliance and smooth trajectory. Upload Fig. 16 from the paper to <code>../assets/blog2-fig6.jpg</code></p>
+    </div>
+
+    <h2>What This Means for Industry</h2>
+    <p>
+      The core contribution here is not a marginal improvement on a benchmark — it's a system architecture that specifically addresses the <strong>real constraints of industrial AGV deployment</strong>:
+    </p>
+    <ul>
+      <li><strong>Single-sensor operation</strong> — LiDAR only, no cameras, no fusion complexity, lower cost, illumination-independent</li>
+      <li><strong>Boundary compliance</strong> — the AGV stays inside its designated corridor even when evading obstacles, which is a hard safety requirement in real plants where production lines are on either side</li>
+      <li><strong>Tow vehicle support</strong> — explicit modelling of caster-swivel dynamics means the trailer behaviour is predictable, not just the AGV body</li>
+      <li><strong>Graceful degradation</strong> — when no valid path exists, the system backtracks and replans from the last safe KP rather than getting stuck or entering an unsafe region</li>
+      <li><strong>Fleet-ready</strong> — validated with up to 10 simultaneous AGVs with zero boundary violations</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <svg class="callout-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <p><strong>Current limitation:</strong> At higher AGV speeds the trailer boundary constraint becomes harder to satisfy — the caster swivel dynamics have less time to settle. We're currently studying the speed threshold beyond which the virtual boundary guarantee no longer holds. More studies with different DDTMR speeds are needed before deploying at high-speed operation.</p>
+    </div>
+
+    <hr/>
+
+    <h2>Citation</h2>
+    <p>If you use this work, please cite:</p>
+    <pre><code>S. Umakarthikeyan et al., "Intelligent Path Planning Strategy for
+Autonomous Differential Drive Tow-Based Mobile Robot in a Flexible
+Manufacturing System," Scientific Reports, vol. 16, 3530, 2026.
+DOI: 10.1038/s41598-025-33531-4</code></pre>
+
+    <div class="callout">
+      <svg class="callout-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      <p>Read the full paper on Nature Scientific Reports: <a href="https://www.nature.com/articles/s41598-025-33531-4" target="_blank" rel="noopener" style="color:var(--ac);font-weight:600">nature.com/articles/s41598-025-33531-4</a></p>
+    </div>
+
+    <div class="bcta">
+      <div>
+        <h3>Working on <em>AGV navigation</em><br>or industrial robotics?</h3>
+        <p>I consult on ROS-based automation and path planning for manufacturing environments.</p>
+      </div>
+      <a href="mailto:siddharthumakarthikeyan@gmail.com" class="bcta-btn">Get in Touch →</a>
+    </div>
+
+  </article>
+</main>
+
+<footer class="bf">
+  <div class="bfw">
+    <span>© <script>document.write(new Date().getFullYear())</script> Siddharth Umakarthikeyan, Ph.D.</span>
+    <div class="bfl">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#research">Research</a>
+      <a href="../index.html#blog">Blog</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
