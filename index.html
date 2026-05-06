@@ -295,6 +295,45 @@ footer span{font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.04em}
   .prh{flex-direction:column;align-items:flex-start;gap:12px}
   .prh p{text-align:left;max-width:100%}
 }
+
+/* GALLERY */
+#gallery{padding:110px 0;background:var(--ink);border-top:1px solid rgba(255,255,255,.08)}
+.glh{max-width:660px;margin-bottom:56px}
+.glg{columns:3;column-gap:16px}
+.gli{break-inside:avoid;margin-bottom:16px;border-radius:12px;overflow:hidden;position:relative;cursor:pointer}
+.gli img{width:100%;height:auto;display:block;transition:transform .6s var(--ez)}
+.gli:hover img{transform:scale(1.04)}
+.glic{position:absolute;bottom:0;left:0;right:0;padding:24px 18px 16px;background:linear-gradient(to top,rgba(0,0,0,.72),transparent);opacity:0;transform:translateY(6px);transition:all .35s var(--ez)}
+.gli:hover .glic{opacity:1;transform:none}
+.glic span{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.85)}
+.gli-ph{break-inside:avoid;margin-bottom:16px;border-radius:12px;background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,.2);text-align:center;padding:40px 24px}
+.gli-ph svg{width:26px;height:26px;opacity:.25}
+.gli-ph p{font-size:11.5px;line-height:1.5;max-width:150px}
+
+/* BLOG */
+#blog{padding:110px 0;background:var(--cr);border-top:1px solid var(--ru)}
+.blh{max-width:660px;margin-bottom:56px}
+.blg{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.blc{background:var(--w);border:1px solid var(--ru);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:all .3s var(--ez);text-decoration:none;color:inherit}
+.blc:hover{box-shadow:0 16px 48px rgba(0,0,0,.09);transform:translateY(-5px)}
+.blci{width:100%;aspect-ratio:16/9;background:var(--iv);border-bottom:1px solid var(--ru);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.blci img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ez)}
+.blc:hover .blci img{transform:scale(1.04)}
+.blci svg{width:28px;height:28px;opacity:.2;color:var(--fa)}
+.blcm{display:flex;align-items:center;gap:8px;padding:13px 18px;border-bottom:1px solid var(--ru)}
+.blcd{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fa)}
+.blcc{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);border:1px solid var(--al);background:var(--al);padding:3px 9px;border-radius:100px;margin-left:auto}
+.blcb{padding:18px 18px 22px;flex:1;display:flex;flex-direction:column}
+.blcb h3{font-family:var(--fd);font-size:clamp(14px,1.3vw,17px);font-weight:500;line-height:1.35;margin-bottom:9px;color:var(--ink)}
+.blcb p{font-size:13px;color:var(--mu);line-height:1.75;margin-bottom:14px;flex:1}
+.blcl{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ac);display:inline-flex;align-items:center;gap:5px;transition:gap .25s;margin-top:auto}
+.blcl:hover{gap:10px}
+.blc-new{border:1.5px dashed var(--ru);background:transparent;align-items:center;justify-content:center;min-height:280px;padding:40px;text-align:center;gap:14px;color:var(--fa)}
+.blc-new svg{width:32px;height:32px;opacity:.3}
+.blc-new p{font-size:13px;line-height:1.6;max-width:180px}
+
+@media(max-width:1024px){.glg{columns:2}.blg{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.glg{columns:1}.blg{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -316,7 +355,9 @@ footer span{font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.04em}
       <li><a href="#consult">Consulting</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#research">Research</a></li>
+      <li><a href="#gallery">Gallery</a></li>
       <li><a href="#exp">Experience</a></li>
+      <li><a href="#blog">Blog</a></li>
       <li><a href="#contact" class="nbtn">Hire Me</a></li>
     </ul>
     <button class="brg" id="burger"><span></span><span></span><span></span></button>
@@ -482,10 +523,46 @@ footer span{font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.04em}
   </div>
 </section>
 
+<section id="gallery">
+  <div class="W">
+    <div class="glh rv">
+      <span class="ey" style="color:rgba(255,255,255,.35)">05 — Lab &amp; Field</span>
+      <h2 class="sh2" style="margin-top:14px;color:#fff">Behind the <em style="color:var(--ac2)">Robots</em></h2>
+      <p style="font-size:15px;color:rgba(255,255,255,.45);margin-top:14px;line-height:1.75;max-width:520px">Moments from the lab, field deployments and conferences — the real work behind the papers.</p>
+    </div>
+    <div class="glg">
+      <div class="gli rv">
+        <img src="assets/VR_ROS2.jpg" alt="VR Robot Teleoperation" loading="lazy"/>
+        <div class="glic"><span>VR Teleoperation · SASTRA</span></div>
+      </div>
+      <div class="gli-ph rv" style="aspect-ratio:4/3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p>Upload to <code style="font-size:10px;opacity:.6">assets/gallery2.jpg</code></p>
+      </div>
+      <div class="gli-ph rv" style="aspect-ratio:3/4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p>Upload to <code style="font-size:10px;opacity:.6">assets/gallery3.jpg</code></p>
+      </div>
+      <div class="gli-ph rv" style="aspect-ratio:16/10">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p>Upload to <code style="font-size:10px;opacity:.6">assets/gallery4.jpg</code></p>
+      </div>
+      <div class="gli-ph rv" style="aspect-ratio:1/1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p>Upload to <code style="font-size:10px;opacity:.6">assets/gallery5.jpg</code></p>
+      </div>
+      <div class="gli-ph rv" style="aspect-ratio:4/3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p>Upload to <code style="font-size:10px;opacity:.6">assets/gallery6.jpg</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="research">
   <div class="W">
     <div class="rsh rv">
-      <span class="ey">05 — Research</span>
+      <span class="ey">06 — Research</span>
       <h2 class="sh2" style="margin-top:14px">Publications & <em>Research Work</em></h2>
       <p style="font-size:15px;color:var(--mu);margin-top:14px;line-height:1.75">Peer-reviewed contributions advancing multi-robot systems, autonomous navigation and intelligent manipulation. Upload graphical abstracts to <code style="font-size:11.5px;color:var(--ac);background:var(--al);padding:2px 8px;border-radius:4px">assets/paper1-abstract.jpg</code> etc.</p>
     </div>
@@ -503,7 +580,7 @@ footer span{font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.04em}
   <div class="W">
     <div class="exg">
       <div class="exl rv">
-        <span class="ey" style="display:block;margin-bottom:14px">06 — Experience</span>
+        <span class="ey" style="display:block;margin-bottom:14px">07 — Experience</span>
         <h2 class="sh2">Career <em>Timeline</em></h2>
         <p>A journey from foundational research at India's premier institutes to leading industrial robotics at scale.</p>
       </div>
@@ -528,11 +605,37 @@ footer span{font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.04em}
   </div>
 </section>
 
+<section id="blog">
+  <div class="W">
+    <div class="blh rv">
+      <span class="ey">08 — Blog</span>
+      <h2 class="sh2" style="margin-top:14px">Thoughts &amp; <em>Writings</em></h2>
+      <p style="font-size:15px;color:var(--mu);margin-top:14px;line-height:1.75">Technical deep-dives, research insights and perspectives on the future of autonomous systems.</p>
+    </div>
+    <div class="blg">
+      <a href="blog/post-1.html" class="blc rv">
+        <div class="blci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="blcm"><span class="blcd">Coming Soon</span><span class="blcc">Robotics</span></div>
+        <div class="blcb"><h3>Add Your First Post Title Here</h3><p>Create <code>blog/post-1.html</code> and update this card with your title and a short excerpt.</p><span class="blcl">Read More →</span></div>
+      </a>
+      <a href="blog/post-2.html" class="blc rv">
+        <div class="blci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="blcm"><span class="blcd">Coming Soon</span><span class="blcc">AI</span></div>
+        <div class="blcb"><h3>Add Your Second Post Title Here</h3><p>Create <code>blog/post-2.html</code> and update this card with your title and a short excerpt.</p><span class="blcl">Read More →</span></div>
+      </a>
+      <div class="blc blc-new rv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <p>More posts coming soon — watch this space.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="contact">
   <div class="W">
     <div class="cog">
       <div class="rv">
-        <span class="ey" style="display:block;margin-bottom:14px">07 — Contact</span>
+        <span class="ey" style="display:block;margin-bottom:14px">09 — Contact</span>
         <h2 class="coh2">Let's Build<br>Something<br><em>Remarkable.</em></h2>
         <p class="cod">Open to research collaborations, senior engineering roles and industry consulting engagements. Especially interested in projects at the frontier of Physical AI and autonomous systems.</p>
         <div class="avb"><span class="avd"></span>Available for Consulting & Collaborations</div>
@@ -550,7 +653,7 @@ footer span{font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.04em}
 <footer>
   <div class="W fi">
     <span id="yr">© 2025 Siddharth Umakarthikeyan, Ph.D.</span>
-    <div class="fl"><a href="#about">About</a><a href="#consult">Consulting</a><a href="#research">Research</a><a href="#contact">Contact</a></div>
+    <div class="fl"><a href="#about">About</a><a href="#projects">Projects</a><a href="#gallery">Gallery</a><a href="#blog">Blog</a><a href="#contact">Contact</a></div>
   </div>
 </footer>
 
